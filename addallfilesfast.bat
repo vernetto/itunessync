@@ -1,0 +1,1 @@
+C:\Users\verne\AppData\Local\Programs\Python\Python313\python.exe addallfilesfast.py
