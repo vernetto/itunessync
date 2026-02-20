@@ -34,7 +34,9 @@ def import_music_folders():
     music_folders = [f.path for f in os.scandir(base_folder) if f.is_dir()]
     existing_playlists = set(pl.Name.lower() for pl in itunes.LibrarySource.Playlists)
 
+    playlist_added_total = 0
     added_total = 0
+    created_playlist_list: list[str] = []
 
     for music_folder in music_folders:
         playlist_name = os.path.basename(os.path.normpath(music_folder))
@@ -46,6 +48,8 @@ def import_music_folders():
 
         log(f"🎵 Creating playlist: {playlist_name}")
         new_playlist = itunes.CreatePlaylist(playlist_name)
+        playlist_added_total += 1
+        created_playlist_list.append(playlist_name)
 
         mp3_files = []
         for root_dir, _, files in os.walk(music_folder):
@@ -64,7 +68,9 @@ def import_music_folders():
             log(f"✅ Added: {os.path.basename(file_path)}")
             added_total += 1
 
-    log(f"✅ Import complete. {added_total} tracks added.")
+    list_as_string = " ".join(created_playlist_list)
+    log(f"✅ Import complete. {added_total} tracks added, {playlist_added_total} playlists created:")
+    log(f"✅ {list_as_string}")
 
 def delete_empty_playlists():
     itunes = win32com.client.Dispatch("iTunes.Application")
